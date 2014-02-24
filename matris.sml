@@ -28,3 +28,6 @@ fun  hejsan ((y::ys)::xs) = y :: hejsan xs :: hejsan delete ((y::ys)::xs)
 
 
 fun bajs (x::xs) = delete (x::xs)  
+
+
+(* asdkjldfsdf *)
