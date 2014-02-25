@@ -89,6 +89,22 @@ fun multiply (x,y) = gg (x, flipp y)
 
 
 
+fun movePos (x, y) = List.drop (x, y) @ List.take (x, y) 
+
+fun moveNeg (x, y) = List.drop (x, length x - y) @ List.take (x, length x - y)
+(*
+fun bajs ([],_) = [] 
+| bajs ((x::xs), y) = moveNeg (x, y) :: bajs(xs, y + 1)
+
+fun bajs' x = bajs (x, 0)
+*)
+
+
+
+fun move (f, [], _) = []
+| move (f, (x::xs), y) = f (x, y) :: move(f, xs, y + 1)
+
+fun move' (f, x) = move (f, x, 0)
 
 
 
@@ -96,8 +112,7 @@ fun multiply (x,y) = gg (x, flipp y)
 
 
 
-
-
+val mat = [[1,2,3],[4,5,6],[7,8,9]]
 
 
 val matris = [[1,2],[5,6],[1,2],[1,2]]
@@ -106,3 +121,22 @@ val matris1 = [[1,2,3,4],[7,8,8,12]]
 val h = [[1, 7], [2, 8]]
 
 val kk = ([1,2,3,4],[1,3,5,7])
+
+
+
+
+
+
+
+fun mult' [] = 1
+  | mult' (x::xs) = x * mult' xs 
+
+
+
+fun mult [] = 0 
+  | mult (x::xs) = mult' x + mult xs
+
+
+
+
+fun determinant x =  mult (flipp (move'(movePos, flipp x))) - mult (move'(moveNeg, flipp x))
