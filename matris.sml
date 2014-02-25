@@ -92,12 +92,6 @@ fun multiply (x,y) = gg (x, flipp y)
 fun movePos (x, y) = List.drop (x, y) @ List.take (x, y) 
 
 fun moveNeg (x, y) = List.drop (x, length x - y) @ List.take (x, length x - y)
-(*
-fun bajs ([],_) = [] 
-| bajs ((x::xs), y) = moveNeg (x, y) :: bajs(xs, y + 1)
-
-fun bajs' x = bajs (x, 0)
-*)
 
 
 
@@ -124,7 +118,7 @@ val kk = ([1,2,3,4],[1,3,5,7])
 
 
 
-
+fun line (x, y) = List.take (x, y - 1) @ List.drop (x, y)
 
 
 
@@ -137,6 +131,33 @@ fun mult [] = 0
   | mult (x::xs) = mult' x + mult xs
 
 
+val kkk = [[5,5,5],[4,0,0],[1,0,1]]
+
+fun determinant x =  mult (flipp (move'(movePos, flipp x))) - mult (flipp (move'(moveNeg, flipp x)))
 
 
-fun determinant x =  mult (flipp (move'(movePos, flipp x))) - mult (move'(moveNeg, flipp x))
+
+
+
+
+
+fun invers ([], y) = [] 
+  | invers (x, y) = if length x < y then 
+			[]
+		    else
+			determinant (line ((flipp x), y)) :: invers(x, y + 1) 
+
+
+
+
+
+fun invers' ([],_) = []
+  | invers' (x, y) = if length x < y then 
+			 []
+		     else 
+			 invers (line (x, y), 1) :: invers' (x, y + 1)
+
+
+val mar = [[1,0,1],[5,4,9],[3,7,0]]
+
+val kar = [[4,9],[7,0]]
