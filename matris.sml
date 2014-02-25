@@ -92,12 +92,6 @@ fun multiply (x,y) = gg (x, flipp y)
 fun movePos (x, y) = List.drop (x, y) @ List.take (x, y) 
 
 fun moveNeg (x, y) = List.drop (x, length x - y) @ List.take (x, length x - y)
-(*
-fun bajs ([],_) = [] 
-| bajs ((x::xs), y) = moveNeg (x, y) :: bajs(xs, y + 1)
-
-fun bajs' x = bajs (x, 0)
-*)
 
 
 
@@ -124,7 +118,7 @@ val kk = ([1,2,3,4],[1,3,5,7])
 
 
 
-
+fun line (x, y) = List.take (x, y - 1) @ List.drop (x, y)
 
 
 
@@ -139,12 +133,12 @@ fun mult [] = 0
 
 fun determinant ((y::ys::yss)::(x::xs::xss)::zs) = if length ((y::ys::yss)::(x::xs::xss)::zs) = 2 then y * xs - ys * x else mult (flipp (move'(movePos, flipp ((y::ys::yss)::(x::xs::xss)::zs)))) - mult (flipp (move'(moveNeg, flipp ((y::ys::yss)::(x::xs::xss)::zs))))
 
-(*
-fun inverse (matrix, (xPos,yPos))
-type: int list list * (int,int) -> int list list
 
-*)
-(* cofactor, and adjoint functions modu argumentet är för att hålla koll på ifall det ska vara +eller- *)
+(* -------------------------------------------------------------------------------------------------
+
+cofactor & adjoint functions modu argumentet är för att hålla koll på ifall det ska vara +eller-
+
+ *)
 
 fun cofactor' (first::matrix, newMatrix, (x,y), (xPos,yPos), 2,modu)  = 
     if (modu mod 2) = 0 then
@@ -171,7 +165,7 @@ fun cofactor''' (matrix, newMatrix,0,modu) = newMatrix
     let
 	val (element,m) = cofactor''(matrix,[],y,length(first),modu)
     in
-	cofactor'''(matrix, element::newMatrix,y-1,m)
+	cofactor'''(matrix, element::newMatrix,y-1,(length(matrix)-y)-1)
     end
     
 
@@ -180,3 +174,36 @@ fun cofactor (matrix) = cofactor'''(matrix, [], length(matrix),0)
 fun adjoint (matrix) = flipp(cofactor(matrix))
 
 val test = [[1,2,3],[0,4,5],[1,0,6]]
+val test2 = [[1,4,~1,0],[2,3,5,~2],[0,3,1,6],[3,0,2,1]]
+
+val kkk = [[5,5,5],[4,0,0],[1,0,1]]
+
+fun determinant x =  mult (flipp (move'(movePos, flipp x))) - mult (flipp (move'(moveNeg, flipp x)))
+
+
+
+
+
+
+
+fun invers ([], y) = [] 
+  | invers (x, y) = if length x < y then 
+			[]
+		    else
+			determinant (line ((flipp x), y)) :: invers(x, y + 1) 
+
+
+
+
+
+fun invers' ([],_) = []
+  | invers' (x, y) = if length x < y then 
+			 []
+		     else 
+			 invers (line (x, y), 1) :: invers' (x, y + 1)
+
+
+val mar = [[1,0,1],[5,4,9],[3,7,0]]
+
+val kar = [[4,9],[7,0]]
+
