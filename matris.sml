@@ -2,18 +2,23 @@
 (*
 additions och subtraktionsfunktioner som du kallar genom funktionen operation
 *)
-
+(* 
 fun add ([], []) = []
   | add ((x::xs), (y::ys)) = x + y :: add (xs, ys)
 
 
 fun sub ([], []) = []
-  | sub ((x::xs), (y::ys)) = x - y :: sub (xs, ys)
+  | sub ((x::xs), (y::ys)) = x - y :: sub (xs, ys) *)
  
 
 
 fun operation (f, [], []) = [] 
   | operation (f, (x::xs), (y::ys)) = f (x, y) :: operation (f, xs, ys)
+  
+  
+fun add (l1, l2) = operation(op +, l1, l2)
+
+fun sub (l1, l2) = operation(op -, l1, l2)
 
 
 (*
