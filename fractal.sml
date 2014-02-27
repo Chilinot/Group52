@@ -146,7 +146,7 @@ fun fractTest() =
                 val f2 = createFractal(3, 2)
                 val d  = fracDivide(f1, f2)
             in
-                Real.==(fracToReal(d), 4.0 / 9.0) (* This test is actually true, even thou it returns false. Possibly a bug in Real.== *)
+                Real.==(fracToReal(d), 4.0 / 9.0) (* This test is actually true, even though it returns false. Possibly a bug in Real.== *)
             end  *)
           | test 5 = fracToString(createFractal(1,4)) = "1/4"
             
