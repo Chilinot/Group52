@@ -148,6 +148,7 @@ fun fractTest() =
             in
                 Real.==(fracToReal(d), 4.0 / 9.0) (* This test is actually true, even thou it returns false. Possibly a bug in Real.== *)
             end
+          | test 5 = fracToString(createFractal(1,4)) = "1/4"
             
         fun getString(true)  = "SUCCESS"
           | getString(false) = "FAILED"
@@ -155,7 +156,8 @@ fun fractTest() =
         print("Test 1: " ^ getString(test(1)) ^ "\n" ^
               "Test 2: " ^ getString(test(2)) ^ "\n" ^
               "Test 3: " ^ getString(test(3)) ^ "\n" ^
-              "Test 4: " ^ getString(test(4)) ^ "\n")
+              "Test 4: " ^ getString(test(4)) ^ "\n" ^
+              "Test 5: " ^ getString(test(5)) ^ "\n")
     end
 
 
