@@ -1,13 +1,16 @@
+use "mat.sml";
+
+
 (*
 additions och subtraktionsfunktioner som du kallar genom funktionen operation
 *)
 
-fun operation (f, [], []) = [] 
+(* fun operation (f, [], []) = [] 
   | operation (f, (x::xs), (y::ys)) = f (x, y) :: operation (f, xs, ys)
   
 fun add (l1, l2) = operation(op +, l1, l2)
 
-fun sub (l1, l2) = operation(op -, l1, l2)
+fun sub (l1, l2) = operation(op -, l1, l2) *)
 
 (*
 --------------------------------------------------------
@@ -16,7 +19,7 @@ funktionen flipp som flippar runt listan innan multiplikationen
 *)
 
 
-fun delete [] = []
+(* fun delete [] = []
   | delete (x::xs) = tl x :: delete xs
 
 fun flipp [] = [] 
@@ -29,7 +32,7 @@ fun flipp [] = []
 		    [] 
         else 
             flipp' x :: flipp (delete x)
-    end
+    end *)
 
 (* -------------------------------------------------------------------------------------------------
 
@@ -37,7 +40,7 @@ cofactor & adjoint functions modu argumentet är för att hålla koll på ifall det 
 
  *)
 
-fun cofactor (matrix) = 
+(* fun cofactor (matrix) = 
     let
         fun cofactor' (first::matrix, newMatrix, (x,y), (xPos,yPos), 2,modu)  = 
             if (modu mod 2) = 0 then
@@ -72,4 +75,4 @@ fun cofactor (matrix) =
 fun adjoint (matrix) = flipp(cofactor(matrix))
 
 val test = [[1,2,3],[0,4,5],[1,0,6]]
-val test2 = [[1,4,~1,0],[2,3,5,~2],[0,3,1,6],[3,0,2,1]]
+val test2 = [[1,4,~1,0],[2,3,5,~2],[0,3,1,6],[3,0,2,1]] *)
