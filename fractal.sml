@@ -49,36 +49,36 @@ abstype fractal = Fractal of int * int with
     fun fracOp(f, Fractal(n1, d1), Fractal(n2, d2)) = Fractal(f(n1 * d2, n2 * d1), d1 * d2)
     
     (*
-        add(f1, f2)
+        fracAdd(f1, f2)
         TYPE:   fractal * fractal -> fractal
         PRE:    True
         POST:   Fractal representing the sum between the fractals f1 and f2.
     *)
-    fun add(f1, f2) = fracOp(op +, f1, f2)
+    fun fracAdd(f1, f2) = fracOp(op +, f1, f2)
     
     (*
-        sub(f1, f2)
+        fracSub(f1, f2)
         TYPE:   fractal * fractal -> fractal
         PRE:    True
         POST:   Fractal representing the differense between the fractals f1 and f2.
     *)
-    fun sub(f1, f2) = fracOp(op -, f1, f2)
+    fun fracSub(f1, f2) = fracOp(op -, f1, f2)
     
     (*
-        mult(f1, f2)
+        fracMult(f1, f2)
         TYPE:   fractal * fractal -> fractal
         PRE:    True
         POST:   Fractal representing the product of the fractals f1 and f2.
     *)
-    fun mult(Fractal(n1, d1), Fractal(n2, d2)) = Fractal(n1 * n2, d1 * d2)
+    fun fracMult(Fractal(n1, d1), Fractal(n2, d2)) = Fractal(n1 * n2, d1 * d2)
     
     (*
-        divide(f1, f2)
+        fracDivide(f1, f2)
         TYPE:   fractal * fractal -> fractal
         PRE:    True
         POST:   Fractal representing the quota of the fractals f1 and f2.
     *)
-    fun divide(fr, Fractal(n, d)) = mult(fr, Fractal(d, n))
+    fun fracDivide(fr, Fractal(n, d)) = fracMult(fr, Fractal(d, n))
 end
 
 fun fractTest() = 
@@ -87,7 +87,7 @@ fun fractTest() =
             let
                 val f1 = createFractal(12, 2)
                 val f2 = toFractal(6)
-                val a  = add(f1, f2)
+                val a  = fracAdd(f1, f2)
             in
                  Real.==(fracToReal(a), 12.0)
             end
@@ -95,7 +95,7 @@ fun fractTest() =
             let
                 val f1 = createFractal(12, 2)
                 val f2 = createFractal(3,4)
-                val s  = sub(f1,f2)
+                val s  = fracSub(f1,f2)
             in
                 Real.==(fracToReal(s), 5.25)
             end 
@@ -103,7 +103,7 @@ fun fractTest() =
             let
                 val f1 = createFractal(12, 1)
                 val f2 = createFractal(23, 2)
-                val m  = mult(f1, f2)
+                val m  = fracMult(f1, f2)
             in
                 Real.==(fracToReal(m), 138.0)
             end 
@@ -111,7 +111,7 @@ fun fractTest() =
             let
                 val f1 = createFractal(4, 6)
                 val f2 = createFractal(3, 2)
-                val d  = divide(f1, f2)
+                val d  = fracDivide(f1, f2)
             in
                 Real.==(fracToReal(d), 8.0 / 18.0)
             end
