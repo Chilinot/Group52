@@ -99,7 +99,7 @@ fun moveNeg (x, y) = List.drop (x, length x - y) @ List.take (x, length x - y)
 
 
 fun move (f, [], _) = []
-| move (f, (x::xs), y) = f (x, y) :: move(f, xs, y + 1)
+  | move (f, (x::xs), y) = f (x, y) :: move(f, xs, y + 1)
 
 fun move' (f, x) = move (f, x, 0)
 
@@ -121,16 +121,6 @@ val kk = ([1,2,3,4],[1,3,5,7])
 
 
 fun line (x, y) = List.take (x, y - 1) @ List.drop (x, y)
-
-
-
-
-
-<<<<<<< HEAD
-
-=======
-fun moveNeg (x, y) = List.drop (x, length x - y) @ List.take (x, length x - y)
->>>>>>> b23c25a8ff0e0902d64486ebfc91e9669b0cb6fe
 
 
 
@@ -159,9 +149,6 @@ fun listMult [] = []
     let
 	fun multi' ([], []) = 0 
 	  | multi' ((x::xs), (y::ys)) = x * y + multi' (xs, ys)
-=======
-fun line (x, y) = List.take (x, y - 1) @ List.drop (x, y)
->>>>>>> b23c25a8ff0e0902d64486ebfc91e9669b0cb6fe
 
 	fun multi (_,[]) = [] 
 	  | multi (x,(y::ys)) = multi' (x,y) :: multi (x, ys)
@@ -179,7 +166,9 @@ fun line (x, y) = List.take (x, y - 1) @ List.drop (x, y)
 
 
 
+(* 
 fun determinant ((y::ys::yss)::(x::xs::xss)::zs) = if length ((y::ys::yss)::(x::xs::xss)::zs) = 2 then y * xs - ys * x else mult (flipp (move'(movePos, flipp ((y::ys::yss)::(x::xs::xss)::zs)))) - mult (flipp (move'(moveNeg, flipp ((y::ys::yss)::(x::xs::xss)::zs))))
+*)
 
 
 (* -------------------------------------------------------------------------------------------------
@@ -255,15 +244,6 @@ fun invers' ([],_) = []
 val mar = [[1,0,1],[5,4,9],[3,7,0]]
 
 val kar = [[4,9],[7,0]]
-
-<<<<<<< HEAD
-
-
-
-
-
-
-
 
 
 
@@ -401,6 +381,3 @@ val matris1 = [[1,2,3,4],[7,8,8,12]]
 val h = [[1, 7], [2, 8]]
 
 val kk = ([1,2,3,4],[1,3,5,7])
-
-=======
->>>>>>> b23c25a8ff0e0902d64486ebfc91e9669b0cb6fe
