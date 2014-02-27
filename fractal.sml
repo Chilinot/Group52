@@ -13,24 +13,6 @@
 abstype fractal = Fractal of int * int with
 
     (*
-        createFractal(n,d)
-        TYPE:   int * int -> fractal
-        PRE:    d can not be equal to zero.
-        POST:   The fractal based on n as numerator and d as denominator.
-        SIDE-EFFECTS: Raises Fail if d is equal to zero.
-    *)
-    fun createFractal(n,0) = raise Fail "The denominator can not be equal to zero!" 
-      | createFractal(n,d) = Fractal(n,d)
-    
-    (*
-        toFractal n
-        TYPE:   int -> fractal
-        PRE:    True
-        POST:   The fractal based on n as numerator and 1 as denominator.
-    *)
-    fun toFractal(n) = Fractal(n, 1)
-    
-    (*
         gcd(n1, n2)
         TYPE:   int * int -> int
         PRE:    True
@@ -54,6 +36,24 @@ abstype fractal = Fractal of int * int with
         in
             Fractal(n div g, d div g)
         end
+
+    (*
+        createFractal(n,d)
+        TYPE:   int * int -> fractal
+        PRE:    d can not be equal to zero.
+        POST:   The fractal based on n as numerator and d as denominator.
+        SIDE-EFFECTS: Raises Fail if d is equal to zero.
+    *)
+    fun createFractal(n,0) = raise Fail "The denominator can not be equal to zero!" 
+      | createFractal(n,d) = simplify(Fractal(n,d))
+    
+    (*
+        toFractal n
+        TYPE:   int -> fractal
+        PRE:    True
+        POST:   The fractal based on n as numerator and 1 as denominator.
+    *)
+    fun toFractal(n) = Fractal(n, 1)
         
     (*
         fractToString f
