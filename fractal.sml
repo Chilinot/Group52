@@ -37,7 +37,7 @@ abstype fractal = Fractal of int * int with
         POST:   The real value from the division of the numerator and denominator.
         SIDE-EFFECTS: Raises Fail if the fractal has a zero denominator.
     *)
-    fun fracToReal(Fractal(n,0)) = raise Fail "fracToReal recieved fractal with a zero denominator!"
+    fun fracToReal(Fractal(n,0)) = raise Fail "fracToReal recieved a fractal with a denominator equal to zero!"
       | fracToReal(Fractal(n,d)) = Real.fromInt(n) / Real.fromInt(d)
     
     (*
@@ -48,12 +48,36 @@ abstype fractal = Fractal of int * int with
     *)
     fun fracOp(f, Fractal(n1, d1), Fractal(n2, d2)) = Fractal(f(n1 * d2, n2 * d1), d1 * d2)
     
+    (*
+        add(f1, f2)
+        TYPE:   fractal * fractal -> fractal
+        PRE:    True
+        POST:   Fractal representing the sum between the fractals f1 and f2.
+    *)
     fun add(f1, f2) = fracOp(op +, f1, f2)
     
+    (*
+        sub(f1, f2)
+        TYPE:   fractal * fractal -> fractal
+        PRE:    True
+        POST:   Fractal representing the differense between the fractals f1 and f2.
+    *)
     fun sub(f1, f2) = fracOp(op -, f1, f2)
     
+    (*
+        mult(f1, f2)
+        TYPE:   fractal * fractal -> fractal
+        PRE:    True
+        POST:   Fractal representing the product of the fractals f1 and f2.
+    *)
     fun mult(Fractal(n1, d1), Fractal(n2, d2)) = Fractal(n1 * n2, d1 * d2)
     
+    (*
+        divide(f1, f2)
+        TYPE:   fractal * fractal -> fractal
+        PRE:    True
+        POST:   Fractal representing the quota of the fractals f1 and f2.
+    *)
     fun divide(fr, Fractal(n, d)) = mult(fr, Fractal(d, n))
 end
 
