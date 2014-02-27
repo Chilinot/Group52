@@ -61,7 +61,7 @@ abstype fractal = Fractal of int * int with
         PRE:    True
         POST:   String representing the fractal f.
     *)
-    fun fractToString(Fractal(n,d)) = Int.toString(n) ^ "/" ^ Int.toString(d)
+    fun fracToString(Fractal(n,d)) = Int.toString(n) ^ "/" ^ Int.toString(d)
     
     (*
         fracToReal f
