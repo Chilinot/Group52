@@ -104,7 +104,7 @@ abstype matrix = Matrix of fractal list list with
             mDet'(m, 1)
         end
         
-    fun cofactor (Matrix(m)) = 
+    fun mCofactor (Matrix(m)) = 
         let
             fun cofactor' (first::matrix, newMatrix, (x,y), (xPos,yPos), 2,modu)  = 
                 if (modu mod 2) = 0 then
@@ -136,9 +136,9 @@ abstype matrix = Matrix of fractal list list with
             Matrix(cofactor'''(m, [], length(m),0))
         end
         
-    fun adjoint (m) = 
+    fun mAdjoint (m) = 
         let
-            val Matrix(c) = cofactor(m)
+            val Matrix(c) = mCofactor(m)
         in
             Matrix(flipp(c))
         end
@@ -150,7 +150,7 @@ abstype matrix = Matrix of fractal list list with
             if fracEqualsZero(det) then
                 raise Fail "The matrix is not invertible!"
             else
-                mFractMult(fracDivide(toFractal(1), det), adjoint(m))
+                mFractMult(fracDivide(toFractal(1), det), mAdjoint(m))
         end
 end
 
