@@ -113,6 +113,9 @@ abstype fractal = Fractal of int * int with
         POST:   Fractal representing the quota of the fractals f1 and f2.
     *)
     fun fracDivide(fr, Fractal(n, d)) = fracMult(fr, Fractal(d, n))
+    
+    fun fracEqualsZero(Fractal(0, _)) = true
+      | fracEqualsZero(_) = false
 end
 
 fun fractTest() = 
