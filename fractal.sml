@@ -114,6 +114,12 @@ abstype fractal = Fractal of int * int with
     *)
     fun fracDivide(fr, Fractal(n, d)) = fracMult(fr, Fractal(d, n))
     
+    (*
+        fracEqualsZero f
+        TYPE:   fractal -> bool
+        PRE:    True
+        POST:   True if the quota of the fractal is equal to zero.
+    *)
     fun fracEqualsZero(Fractal(0, _)) = true
       | fracEqualsZero(_) = false
 end
