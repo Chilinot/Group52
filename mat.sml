@@ -60,7 +60,44 @@ abstype matrix = Matrix of fractal list list with
     fun mAdd(m1, m2) = mOp(fracAdd, m1, m2)
     
     fun mSub(m1, m2) = mOp(fracSub, m1, m2)
+    
+    fun mMult(Matrix(m1), Matrix(m2)) =
+        let
+            fun multi'([], _) = toFractal(0)
+              | multi'(_, []) = toFractal(0)
+              | multi'((x::xs), (y::ys)) = fracAdd(fracMult(x, y), multi'(xs, ys))
+
+            fun multi(_, [])      = [] 
+              | multi(x, (y::ys)) = multi' (x,y) :: multi (x, ys)
+
+            fun multiply'([], _) = [] 
+              | multiply'((x::xs), (y::ys)) = multi (x, y::ys) :: multiply' (xs, (y::ys))
+
+            fun multiply(x, []) = x
+              | multiply(x, y) = multiply' (x, flipp y)
+        in
+            Matrix(multiply (m1, m2))
+        end 
+        
+    fun mFractMult(f, Matrix(m)) = 
+        let
+            fun mFractMult'(_,  [])  = []
+              | mFractMult'(f, e::r) = fracMult(f, e) :: mFractMult'(f, r)
+              
+            fun mFractMult''(_, [])   = []
+              | mFractMult''(f, r::m) = mFractMult'(f, r) :: mFractMult''(f, m)
+        in
+            Matrix(mFractMult''(f, m))
+        end
 end
+
+(* 
+fun max ([[x]], k) = x
+  | max ((x::xs), k) = 
+    if k > length x then 
+        0
+    else 
+        (if k mod 2 = 0 then ~1 else 1) * List.nth(x, k - 1) * max (flipp (line ((flipp xs), k)), 1) + max ((x::xs), k + 1)  *)
 
 
 
