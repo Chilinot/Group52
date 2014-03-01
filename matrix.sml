@@ -16,12 +16,35 @@ fun flipp([])    = []
     
 fun line (x, y) = List.take (x, y - 1) @ List.drop (x, y)
 
+(*
+    REPRESENTATION CONVENTION: 
+        Represents a basic fractal-matrix.
+        
+        PARAMETERS:
+            Matrix(m):
+                m - A 2D-fractal list, where the top list contains the row lists.
+                    Each element in the top list is a row in the matrix.
+    
+    REPRESENTATION INVARIANT: 
+        None.
+*)
 abstype matrix = Matrix of fractal list list with
 
+    (*
+        createMatrix m
+        TYPE:   fractal list list -> matrix
+        PRE:    True
+        POST:   A fractal-matrix based on m.
+    *)
     fun createMatrix(m) = Matrix(m)
     
-    fun emptyMatrix() = Matrix([])
-    
+    (*
+        addRow(m, l)
+        TYPE:   matrix * fractal list -> matrix
+        PRE:    Length of l has to be the same as the width of the matrix m. Matrix m can not be empty.
+        POST:   Matrix m with the fractal list l added as the top row.
+        SIDE-EFFECTS: Raises Fail if the matrix m is empty or the list l does not have a length equal to the width of the matrix.
+    *)
     fun addRow(Matrix([]), _) = raise Fail "addRow recieved an empty matrix!"
       | addRow(Matrix(mat as(r::m)), l) = 
         if length l = length r then
@@ -29,21 +52,40 @@ abstype matrix = Matrix of fractal list list with
         else
             raise Fail "Length of l is not equal to the width of the matrix!" (* This is to avoid problems with the matrix getting out of shape *)
     
+    (* 
+        addColumn(m, l)
+        TYPE:   matrix * fractal list -> matrix
+        PRE:    Length of l has to be the same as the height of the matrix m.
+        POST:   Matrix m with the added fractal list l as the leftmost column.
+        SIDE-EFFECTS: Raises Fail if the length of list l is not equal to the heigth of the matrix.
+    *)
     fun addColumn(Matrix(m), l) = 
         if length m = length l then
             Matrix(flipp(l::(flipp(m))))
         else
             raise Fail "Length of l is not equal to the height of the matrix!" (* Same as for addRow *)
         
-    fun matrixToString(Matrix(m)) = 
+    (*
+        matrixToString m
+        TYPE:   matrix -> string
+        PRE:    True
+        POST:   String representing the matrix where each row is terminated with a line break.
+    *)
+    (*  VARIANT: Height of matrix m. *)
+    fun matrixToString(Matrix([]))   = ""
+      | matrixToString(Matrix(r::m)) = 
         let
+            (*
+                matrixToString' r
+                TYPE:   fractal list -> string
+                PRE:    True
+                POST:   String representing each fractal in the list r.
+            *)
+            (*  VARIANT: Length of r. *)
             fun matrixToString'([])   = ""
               | matrixToString'(e::r) = fracToString(e) ^ " " ^ matrixToString'(r)
-            
-            fun matrixToString''([])   = ""
-              | matrixToString''(r::m) = matrixToString'(r) ^ "\n" ^ matrixToString''(m)
         in
-            matrixToString''(m)
+            matrixToString'(r) ^ "\n" ^ matrixToString(Matrix(m))
         end
         
     fun mOp(f, m1, m2) = 
@@ -92,14 +134,22 @@ abstype matrix = Matrix of fractal list list with
             Matrix(mFractMult''(f, m))
         end
         
-    fun mDet(Matrix(m)) = 
+    fun mDet(Matrix([])) = raise Fail "mDet can not determine the determinant of an empty matrix!"
+      | mDet(Matrix(m))  = 
         let
-            fun mDet'([[x]], k)   = x
+            fun mDet'([[x]],   k) = x
               | mDet'((x::xs), k) = 
                 if k > length x then 
                     toFractal(0)
-                else 
-                    fracAdd(fracMult(fracMult((if k mod 2 = 0 then toFractal(~1) else toFractal(1)), List.nth(x, k - 1)), mDet'(flipp (line ((flipp xs), k)), 1)), mDet'((x::xs), k + 1))
+                else
+                    let
+                        val s  = if k mod 2 = 0 then toFractal(~1) else toFractal(1) (* Determine sign for the cofactor. *)
+                        val c  = fracMult(s, List.nth(x, k - 1))                     (* Retrieve the cofactor. *)
+                        val d1 = mDet'(flipp (line ((flipp xs), k)), 1)              (* Retrieve the determinant of the minor. *)
+                        val d2 = mDet'((x::xs), k + 1)                               (* Retrieve the determinant for the rest of the matrix. *)
+                    in
+                        fracAdd(fracMult(c, d1), d2)                                 (* Multiply the cofactor with the determinant of the minor and add the determinant of the rest of the matrix. *)
+                    end
         in
             mDet'(m, 1)
         end
