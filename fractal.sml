@@ -78,7 +78,7 @@ abstype fractal = Fractal of int * int with
         fracOp(f, f1, f2)
         TYPE:   (int * int -> int) * fractal * fractal -> fractal
         PRE:    True
-        POST:   
+        POST:   Fractal equal to the result of function f being applied to both f1 and f2.
     *)
     fun fracOp(f, Fractal(n1, d1), Fractal(n2, d2)) = simplify(Fractal(f(n1 * d2, n2 * d1), d1 * d2))
     
