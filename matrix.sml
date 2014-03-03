@@ -254,9 +254,13 @@ abstype matrix = Matrix of fractal list list with
         end
 end
 
-
-
-
+(*
+    matrixTest()
+    TYPE:   unit -> unit
+    PRE:    None
+    POST:   None
+    SIDE-EFFECTS: Performs unit-tests on all functions in the abstype matrix and prints the results to the console.
+*)
 fun matrixTest() = 
     let
         fun test 1 = 
@@ -340,4 +344,4 @@ fun matrixTest() =
               "Test mCofactor: \t "   ^ getString(test(6)) ^ "\n" ^
               "Test mAdjoint: \t "    ^ getString(test(7)) ^ "\n" ^
               "Test mInv: \t "        ^ getString(test(8)) ^ "\n" )
-    end
+    end 
