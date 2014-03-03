@@ -14,6 +14,21 @@ fun flipp([])    = []
         flipp' x :: flipp (delete x)
     end
     
+(*
+    createList(e, n)
+    TYPE:   'a * int -> 'a list
+    PRE:    True
+    POST:   List containing n amount of e.
+    EXAMPLE:
+        Create a list of 1's with a length of 5:
+            createList(1, 5) = [1,1,1,1,1]
+        Create a list of "s"'s with a length of 3:
+            createList("s", 3) = ["s", "s", "s"]
+*)
+(*  VARIANT: Size of n. *)
+fun createList(_, 0) = []
+  | createList(e, n) = e :: createList(e, n-1)
+
 fun line (x, y) = List.take (x, y - 1) @ List.drop (x, y)
 
 (*
@@ -37,33 +52,6 @@ abstype matrix = Matrix of fractal list list with
         POST:   A fractal-matrix based on m.
     *)
     fun createMatrix(m) = Matrix(m)
-    
-    (*
-        addRow(m, l)
-        TYPE:   matrix * fractal list -> matrix
-        PRE:    Length of l has to be the same as the width of the matrix m. Matrix m can not be empty.
-        POST:   Matrix m with the fractal list l added as the top row.
-        SIDE-EFFECTS: Raises Fail if the matrix m is empty or the list l does not have a length equal to the width of the matrix.
-    *)
-    fun addRow(Matrix([]), _) = raise Fail "addRow recieved an empty matrix!"
-      | addRow(Matrix(mat as(r::m)), l) = 
-        if length l = length r then
-            Matrix(l::mat)
-        else
-            raise Fail "Length of l is not equal to the width of the matrix!" (* This is to avoid problems with the matrix getting out of shape *)
-    
-    (* 
-        addColumn(m, l)
-        TYPE:   matrix * fractal list -> matrix
-        PRE:    Length of l has to be the same as the height of the matrix m.
-        POST:   Matrix m with the added fractal list l as the leftmost column.
-        SIDE-EFFECTS: Raises Fail if the length of list l is not equal to the heigth of the matrix.
-    *)
-    fun addColumn(Matrix(m), l) = 
-        if length m = length l then
-            Matrix(flipp(l::(flipp(m))))
-        else
-            raise Fail "Length of l is not equal to the height of the matrix!" (* Same as for addRow *)
         
     (*
         matrixToString m
@@ -123,15 +111,12 @@ abstype matrix = Matrix of fractal list list with
             Matrix(multiply (m1, m2))
         end 
         
-    fun mFractMult(f, Matrix(m)) = 
+    fun mFractMult(f, matrix as (Matrix(m))) = 
         let
-            fun mFractMult'(_,  [])  = []
-              | mFractMult'(f, e::r) = fracMult(f, e) :: mFractMult'(f, r)
-              
-            fun mFractMult''(_, [])   = []
-              | mFractMult''(f, r::m) = mFractMult'(f, r) :: mFractMult''(f, m)
+            val height = length m
+            val width  = if height = 0 then 0 else length(hd m)
         in
-            Matrix(mFractMult''(f, m))
+            mOp(fracMult, Matrix(createList(createList(f, width), height)), matrix)
         end
         
     fun mDet(Matrix([])) = raise Fail "mDet can not determine the determinant of an empty matrix!"
@@ -206,6 +191,110 @@ end
 
 
 
-val m = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]]);
 
-val m2 = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(0),toFractal(4),toFractal(5)],[toFractal(1),toFractal(0),toFractal(6)]])
+fun matrixTest() = 
+    let
+        fun test 1 = 
+            let
+                val m = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                val a = createMatrix([[toFractal(2),toFractal(4),toFractal(6)],[toFractal(8),toFractal(10),toFractal(12)],[toFractal(14),toFractal(16),toFractal(18)]])
+                val r = mAdd(m, m)
+            in
+                matrixToString(r) = matrixToString(a)
+            end
+          | test 2 =
+            let
+                val m = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                val a = createMatrix([[toFractal(0),toFractal(0),toFractal(0)],[toFractal(0),toFractal(0),toFractal(0)],[toFractal(0),toFractal(0),toFractal(0)]])
+                val r = mSub(m, m)
+            in
+                matrixToString(r) = matrixToString(a)
+            end
+          | test 3 =
+            let
+                val m = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                val a = createMatrix([[toFractal(30),toFractal(36),toFractal(42)],[toFractal(66),toFractal(81),toFractal(96)],[toFractal(102),toFractal(126),toFractal(150)]])
+                val r = mMult(m, m)
+            in
+                matrixToString(r) = matrixToString(a)
+            end
+          | test 4 =
+            let
+                val m = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                val a = createMatrix([[toFractal(2),toFractal(4),toFractal(6)],[toFractal(8),toFractal(10),toFractal(12)],[toFractal(14),toFractal(16),toFractal(18)]])
+                val r = mFractMult(toFractal(2), m)
+                
+                val a2 = createMatrix([[createFractal(1,2),createFractal(2,2),createFractal(3,2)],[createFractal(4,2),createFractal(5,2),createFractal(6,2)],[createFractal(7,2),createFractal(8,2),createFractal(9,2)]])
+                val r2 = mFractMult(createFractal(1,2), m)
+            in
+                matrixToString(r) = matrixToString(a) andalso
+                matrixToString(r2) = matrixToString(a2)
+            end
+          | test 5 =
+            let
+                val m = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                val a = 0.0
+                val r = mDet(m)
+            in
+                Real.==(fracToReal(r), a)
+            end
+          | test 6 =
+            let
+                val m = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                val a = createMatrix([[toFractal(~3),toFractal(6),toFractal(~3)],[toFractal(6),toFractal(~12),toFractal(6)],[toFractal(~3),toFractal(6),toFractal(~3)]])
+                val r = mCofactor(m)
+            in
+                matrixToString(r) = matrixToString(a)
+            end
+          | test 7 =
+            let
+                val m = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                val a = createMatrix([[toFractal(~3),toFractal(6),toFractal(~3)],[toFractal(6),toFractal(~12),toFractal(6)],[toFractal(~3),toFractal(6),toFractal(~3)]])
+                val r = mAdjoint(m)
+            in
+                matrixToString(r) = matrixToString(a)
+            end
+          | test 8 = 
+            let
+                val m  = createMatrix([[toFractal(1),toFractal(0),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                val ma = createMatrix([[toFractal(3),toFractal(~24),toFractal(15)],[toFractal(~6),toFractal(12),toFractal(~6)],[toFractal(3),toFractal(8),toFractal(~5)]])
+                val a  = mFractMult(createFractal(1, 12), ma)
+                val r  = mInv(m)
+            in
+                matrixToString(r) = matrixToString(a)
+            end
+            
+        fun getString(true)  = "SUCCESS"
+          | getString(false) = "FAILED"
+    in
+        print("Test mAdd: \t "        ^ getString(test(1)) ^ "\n" ^
+              "Test mSub: \t "        ^ getString(test(2)) ^ "\n" ^
+              "Test mMult: \t "       ^ getString(test(3)) ^ "\n" ^
+              "Test mFractMult: \t "  ^ getString(test(4)) ^ "\n" ^
+              "Test mDet: \t "        ^ getString(test(5)) ^ "\n" ^
+              "Test mCofactor: \t "   ^ getString(test(6)) ^ "\n" ^
+              "Test mAdjoint: \t "    ^ getString(test(7)) ^ "\n" ^
+              "Test mInv: \t "        ^ getString(test(8)) ^ "\n" )
+    end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
