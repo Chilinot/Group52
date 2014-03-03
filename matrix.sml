@@ -160,10 +160,23 @@ abstype matrix = Matrix of fractal list list with
     *)
     fun mMult(Matrix(m1), Matrix(m2)) =
         let
+            (*
+                multi'(l1, l2)
+                TYPE:   fractal list * fractal list -> fractal
+                PRE:    True
+                POST:   The sum of each value in the two lists l1 and l2 being multiplied together and added to the rest of the products.
+            *)
+            (*  VARIANT: Length of l1 and l2. *)
             fun multi'([], _) = toFractal(0)
               | multi'(_, []) = toFractal(0)
               | multi'((x::xs), (y::ys)) = fracAdd(fracMult(x, y), multi'(xs, ys))
 
+            (*
+                multi(l1, l2)
+                TYPE:   fractal list * fractal list list -> fractal list
+                PRE:    True
+                POST:   
+            *)
             fun multi(_, [])      = [] 
               | multi(x, (y::ys)) = multi' (x,y) :: multi (x, ys)
 
@@ -176,6 +189,12 @@ abstype matrix = Matrix of fractal list list with
             Matrix(multiply (m1, m2))
         end 
         
+    (*
+        mFractMult(f, m)
+        TYPE:   fractal * matrix -> matrix
+        PRE:    Matrix m is a square matrix.
+        POST:   Matrix corresponding to the matrix m being multiplied with the fractal f.
+    *)
     fun mFractMult(f, matrix as (Matrix(m))) = 
         let
             val height = length m
@@ -184,9 +203,22 @@ abstype matrix = Matrix of fractal list list with
             mOp(fracMult, Matrix(createList(createList(f, width), height)), matrix)
         end
         
+    (*
+        mDet m
+        TYPE:   matrix -> fractal
+        PRE:    Matrix m is a non-empty square matrix. 
+        POST:   Fractal corresponding to the determinant of the matrix m.
+    *)
     fun mDet(Matrix([])) = raise Fail "mDet can not determine the determinant of an empty matrix!"
       | mDet(Matrix(m))  = 
         let
+            (*
+                mDet'(m, k)
+                TYPE:   fractal list list * int -> fractal
+                PRE:    m is non-empty and k is equal to 1.
+                POST:   The determinant of the 2D-fractal list m.
+            *)
+            (*  VARIANT: k *)
             fun mDet'([[x]],   k) = x
               | mDet'((x::xs), k) = 
                 if k > length x then 
@@ -236,6 +268,12 @@ abstype matrix = Matrix of fractal list list with
             Matrix(cofactor'''(m, [], length(m),0))
         end
         
+    (*
+        mAdjoint m
+        TYPE:   matrix -> matrix
+        PRE:    True
+        POST:   The adjugate/adjoint of the matrix m.
+    *)
     fun mAdjoint (m) = 
         let
             val Matrix(c) = mCofactor(m)
@@ -243,6 +281,12 @@ abstype matrix = Matrix of fractal list list with
             Matrix(flipp(c))
         end
         
+    (*
+        mInv m
+        TYPE:   matrix -> matrix
+        PRE:    The determinant of the matrix m is not equal to zero.
+        POST:   Matrix corresponding to the inverse of the matrix m.
+    *)
     fun mInv(m) = 
         let
             val det = mDet(m)
