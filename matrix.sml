@@ -14,10 +14,30 @@ fun delete([])     = []
   | delete([]::xs) = [] :: delete xs
   | delete(x::xs)  = tl x :: delete xs
 
+(*
+    flipp l
+    TYPE:   'a list list -> 'a list list
+    PRE:    True
+    POST:   Each column of elements in l has become separate rows.
+    EXAMPLE:
+        Flipp a 2-D list with the following structure: [[1, 2, 3],
+                                                        [4, 5, 6],
+                                                        [7, 8, 9]]
+                                                        
+            flipp([[1,2,3],[4,5,6],[7,8,9]]) = [[1,4,7],[2,5,8],[3,6,9]]
+*)
+(*  VARIANT: Length of l. *)
 fun flipp([])    = []
   | flipp([]::x) = []
   | flipp(x)     = 
     let
+        (*
+            flipp' l
+            TYPE:   'a list list -> 'a list
+            PRE:    True
+            POST:   A list, where each element are the heads of the elements in the argument l.
+        *)
+        (*  VARIANT: Length of l. *)
         fun flipp'([])     = []
           | flipp'([]::xs) = []
           | flipp'(x::xs)  = hd x :: flipp' xs
@@ -40,7 +60,17 @@ fun flipp([])    = []
 fun createList(_, 0) = []
   | createList(e, n) = e :: createList(e, n-1)
 
-fun line (x, y) = List.take (x, y - 1) @ List.drop (x, y)
+(*
+    dropNth(l, n)
+    TYPE:   'a list * int -> 'a list
+    PRE:    0 < n <= length l
+    POST:   List l, where the n'th element has been removed. 
+            The first element in the list is regarded as having position 1.
+    EXAMPLE:
+        Remove the first element in the list [1,2,3,4]:
+            dropNth([1,2,3,4], 1) = [2,3,4]
+*)
+fun dropNth (l, n) = List.take (l, n - 1) @ List.drop (l, n)
 
 (*
     REPRESENTATION CONVENTION: 
@@ -141,7 +171,7 @@ abstype matrix = Matrix of fractal list list with
                     let
                         val s  = if k mod 2 = 0 then toFractal(~1) else toFractal(1) (* Determine sign for the cofactor. *)
                         val c  = fracMult(s, List.nth(x, k - 1))                     (* Retrieve the cofactor. *)
-                        val d1 = mDet'(flipp (line ((flipp xs), k)), 1)              (* Retrieve the determinant of the minor. *)
+                        val d1 = mDet'(flipp (dropNth ((flipp xs), k)), 1)              (* Retrieve the determinant of the minor. *)
                         val d2 = mDet'((x::xs), k + 1)                               (* Retrieve the determinant for the rest of the matrix. *)
                     in
                         fracAdd(fracMult(c, d1), d2)                                 (* Multiply the cofactor with the determinant of the minor and add the determinant of the rest of the matrix. *)
