@@ -163,11 +163,11 @@ fun fractTest() =
         fun getString(true)  = "SUCCESS"
           | getString(false) = "FAILED"
     in
-        print("Test add:    " ^ getString(test(1)) ^ "\n" ^
-              "Test sub:    " ^ getString(test(2)) ^ "\n" ^
-              "Test mult:   " ^ getString(test(3)) ^ "\n" ^
+        print("Test add: \t "    ^ getString(test(1)) ^ "\n" ^
+              "Test sub: \t "    ^ getString(test(2)) ^ "\n" ^
+              "Test mult: \t "   ^ getString(test(3)) ^ "\n" ^
               (* "Test 4: " ^ getString(test(4)) ^ "\n" ^ *)
-              "Test string: " ^ getString(test(5)) ^ "\n")
+              "Test string: \t " ^ getString(test(5)) ^ "\n")
     end
 
 
