@@ -124,7 +124,14 @@ abstype fractal = Fractal of int * int with
       | fracEqualsZero(_) = false
 end
 
-fun fractTest() = 
+(* 
+    fractalTest()
+    TYPE:   unit -> unit
+    PRE:    None
+    POST:   None
+    SIDE-EFFECTS: Performs unit-tests on all functions in the abstype fractal and prints the result to the console.
+*)
+fun fractalTest() = 
     let
         fun test 1 = 
             let
@@ -172,4 +179,4 @@ fun fractTest() =
               (* "Test 4: " ^ getString(test(4)) ^ "\n" ^ *)
               "Test fracToString: \t " ^ getString(test(5)) ^ "\n" ^
               "Test gcd: \t "          ^ getString(test(6)) ^ "\n" )
-    end
+    end 
