@@ -117,6 +117,12 @@ abstype matrix = Matrix of fractal list list with
             matrixToString'(r) ^ "\n" ^ matrixToString(Matrix(m))
         end
         
+    (*
+        mOp(f, m1, m2)
+        TYPE:   (fractal * fractal -> fractal) * matrix * matrix -> matrix
+        PRE:    True
+        POST:   Matrix, where each element with the same positions in m1 and m2 has had the function f applied to them.
+    *)
     fun mOp(f, m1, m2) = 
         let
             fun mOp'(_, _, []) = []
@@ -130,10 +136,28 @@ abstype matrix = Matrix of fractal list list with
             Matrix(mOp''(f, m1, m2))
         end
         
+    (*
+        mAdd(m1, m2)
+        TYPE:   matrix * matrix -> matrix
+        PRE:    True
+        POST:   The result of the two matrixes m1 and m2 added to eachother.
+    *)
     fun mAdd(m1, m2) = mOp(fracAdd, m1, m2)
     
+    (*
+        mSub(m1, m2)
+        TYPE:   matrix * matrix -> matrix
+        PRE:    True
+        POST:   The result of the two matrixes m1 and m2 subtracted from eachother.
+    *)
     fun mSub(m1, m2) = mOp(fracSub, m1, m2)
     
+    (*
+        mMult(m1, m2)
+        TYPE:   matrix * matrix -> matrix
+        PRE:    True
+        POST:   The result of the two matrixes m1 and m2 multiplied with eachother.
+    *)
     fun mMult(Matrix(m1), Matrix(m2)) =
         let
             fun multi'([], _) = toFractal(0)
@@ -171,7 +195,7 @@ abstype matrix = Matrix of fractal list list with
                     let
                         val s  = if k mod 2 = 0 then toFractal(~1) else toFractal(1) (* Determine sign for the cofactor. *)
                         val c  = fracMult(s, List.nth(x, k - 1))                     (* Retrieve the cofactor. *)
-                        val d1 = mDet'(flipp (dropNth ((flipp xs), k)), 1)              (* Retrieve the determinant of the minor. *)
+                        val d1 = mDet'(flipp (dropNth ((flipp xs), k)), 1)           (* Retrieve the determinant of the minor. *)
                         val d2 = mDet'((x::xs), k + 1)                               (* Retrieve the determinant for the rest of the matrix. *)
                     in
                         fracAdd(fracMult(c, d1), d2)                                 (* Multiply the cofactor with the determinant of the minor and add the determinant of the rest of the matrix. *)
