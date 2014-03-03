@@ -19,7 +19,7 @@ abstype fractal = Fractal of int * int with
         POST:   The greatest common divider between n1 and n2.
     *)
     fun gcd(n1, n2) =
-        if n2 > 0 then
+        if n2 <> 0 then
             gcd(n2, n1 mod n2)
         else
             n1
@@ -158,7 +158,10 @@ fun fractTest() =
             in
                 Real.==(fracToReal(d), 4.0 / 9.0) (* This test is actually true, even though it returns false. Possibly a bug in Real.== *)
             end  *)
-          | test 5 = fracToString(createFractal(1,4)) = "1/4"
+          | test 5 = 
+            fracToString(createFractal(1,4)) = "1/4"
+          | test 6 =
+            gcd(1, 12) = 1 andalso gcd(~1, 12) = 1 andalso gcd(12, 24) = 12 andalso gcd(~12, ~24) = ~12 andalso gcd(~12, ~23) = ~1
             
         fun getString(true)  = "SUCCESS"
           | getString(false) = "FAILED"
@@ -167,7 +170,8 @@ fun fractTest() =
               "Test fracSub: \t "      ^ getString(test(2)) ^ "\n" ^
               "Test fracMult: \t "     ^ getString(test(3)) ^ "\n" ^
               (* "Test 4: " ^ getString(test(4)) ^ "\n" ^ *)
-              "Test fracToString: \t " ^ getString(test(5)) ^ "\n")
+              "Test fracToString: \t " ^ getString(test(5)) ^ "\n" ^
+              "Test gcd: \t "          ^ getString(test(6)) ^ "\n" )
     end
 
 
