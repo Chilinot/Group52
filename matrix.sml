@@ -1,7 +1,18 @@
 use "fractal.sml";
 
-fun delete([])    = []
-  | delete(x::xs) = tl x :: delete xs
+(*
+    delete l
+    TYPE:    'a list list -> 'a list list
+    PRE:     True
+    POST:    l, where each element in l has had their head elements removed.
+    EXAMPLE: 
+        Remove the head elements in the list list [[1,2,3], [4,5,6], [7,8,9]]:
+            delete([[1,2,3], [4,5,6], [7,8,9]]) = [[2,3],[5,6],[8,9]]
+*)
+(*  VARIANT: Length of l. *)
+fun delete([])     = []
+  | delete([]::xs) = [] :: delete xs
+  | delete(x::xs)  = tl x :: delete xs
 
 fun flipp([])    = []
   | flipp([]::x) = []
