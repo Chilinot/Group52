@@ -173,14 +173,3 @@ fun fractTest() =
               "Test fracToString: \t " ^ getString(test(5)) ^ "\n" ^
               "Test gcd: \t "          ^ getString(test(6)) ^ "\n" )
     end
-
-
-
-
-
-
-
-
-
-
-

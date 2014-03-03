@@ -276,25 +276,3 @@ fun matrixTest() =
               "Test mAdjoint: \t "    ^ getString(test(7)) ^ "\n" ^
               "Test mInv: \t "        ^ getString(test(8)) ^ "\n" )
     end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
