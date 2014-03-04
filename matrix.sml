@@ -357,16 +357,16 @@ abstype matrix = Matrix of fractal list list with
               | retrieveFractal(#" "::l) = []
               | retrieveFractal(h::l)    = h :: retrieveFractal(l)
             
-            fun parse([]) = raise Fail "Parse ran out of elements before it struck an end character!"
-              | parse(h::l) = 
+            fun parseRow([]) = raise Fail "parseRow ran out of elements before it struck an end character!"
+              | parseRow(h::l) = 
                 if h = #"{" orelse h = #"," orelse h = #" " then  (* Skip these characters *)
-                    parse(l)
+                    parseRow(l)
                 else if h = #"}" then                             (* End character, marks the end of the recursion *)
                     ([], l)
                 else
                     let
                         val f = [h] @ retrieveFractal(l)
-                        val (l2, r) = parse(List.drop(l, length(f)))
+                        val (l2, r) = parseRow(List.drop(l, length(f)))
                     in
                         (fractalFromString(implode(f)) :: l2, r)
                     end
@@ -377,7 +377,7 @@ abstype matrix = Matrix of fractal list list with
                     parseMatrix'(s)
                 else if h = #"{" then
                     let
-                        val (l, r) = parse(s)
+                        val (l, r) = parseRow(s)
                     in
                         l :: parseMatrix'(r)
                     end
