@@ -142,6 +142,7 @@ abstype matrix = Matrix of fractal list list with
                 PRE:    True
                 POST:   List of results from the mOp' function, where the arguments passed are the function f, and each row in the matrixes m1 and m2.
             *)
+            (*  VARIANT: Height of m1 and m2. *)
             fun mOp''(_, _, Matrix([])) = []
               | mOp''(_, Matrix([]), _) = []
               | mOp''(f, Matrix(r1::m1), Matrix(r2::m2)) = mOp'(f, r1, r2) :: mOp''(f, Matrix(m1), Matrix(m2))
