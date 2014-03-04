@@ -22,23 +22,6 @@ fun readNumber () =
     | NONE => (print "Invalid number!\n"; readNumber ())
   );
   
-fun menu() =
-    let
-        val m = print(
-            "1. Enter a matrix.\n" ^ 
-            "2. Enter a second matrix.\n" ^ 
-            "3. Calculate inverse \t of first.\n" ^ 
-            "4.    ...    determinant \t ... .\n" ^ 
-            "5.    ...    adjugate \t ... .\n" ^ 
-            "6.    ...    cofactor matrix \t ... .\n"
-        )
-    in
-        case readNumber() of
-            1 => 
-    end
-
-
-
 
 
 
