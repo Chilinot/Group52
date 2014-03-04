@@ -354,26 +354,25 @@ abstype matrix = Matrix of fractal list list with
             fun retrieveFractal([])      = []
               | retrieveFractal(#"}"::l) = []
               | retrieveFractal(#","::l) = []
-              | retrieveFractal(#" "::l) = []
               | retrieveFractal(h::l)    = h :: retrieveFractal(l)
             
             fun parseRow([]) = raise Fail "parseRow ran out of elements before it struck an end character!"
               | parseRow(h::l) = 
-                if h = #"{" orelse h = #"," orelse h = #" " then  (* Skip these characters *)
+                if h = #"{" orelse h = #"," then  (* Skip these characters *)
                     parseRow(l)
                 else if h = #"}" then                             (* End character, marks the end of the recursion *)
                     ([], l)
                 else
                     let
-                        val f = [h] @ retrieveFractal(l)
-                        val (l2, r) = parseRow(List.drop(l, length(f)))
+                        val f = h :: retrieveFractal(l)
+                        val (l2, r) = parseRow(List.drop(l, length(f) - 1))
                     in
                         (fractalFromString(implode(f)) :: l2, r)
                     end
         
             fun parseMatrix'([]) = raise Fail "parseMatrix' ran out of characters before the end character!"
               | parseMatrix'(h::s) = 
-                if h = #"," orelse h = #" " then
+                if h = #"," then
                     parseMatrix'(s)
                 else if h = #"{" then
                     let
@@ -386,7 +385,7 @@ abstype matrix = Matrix of fractal list list with
                 else
                     raise Fail "parseMatrix' seemed to have recieved an argument of illegal form!"
         in
-            Matrix(parseMatrix'(explode(s)))
+            Matrix(parseMatrix'(List.filter (fn x => x <> #" ") (explode(s))))
         end
 end
 
