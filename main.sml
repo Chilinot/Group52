@@ -23,6 +23,23 @@ fun readNumber () =
   );
   
 
+fun secondMatrix(m) = 
+    let
+    in
+    end
+
+fun start() =
+    let 
+        val s = (
+            print "Please enter a matrix: ";
+            case parseMatrix(readLine()) of
+                SOME m => m
+              | NONE   => (print "You need to enter something!"; start())
+        )
+    in
+        secondMatrix(m)
+    end
+    
 
 
 

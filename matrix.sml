@@ -337,6 +337,38 @@ abstype matrix = Matrix of fractal list list with
             else
                 mFractMult(fracDivide(toFractal(1), det), mAdjoint(m))
         end
+    
+    fun parseMatrix(s) =
+        let
+            fun parseMatrix'(s) = 
+                let
+                    fun parse([]) = raise Fail "Parse ran out of elements before it struck an end character!"
+                      | parse(h::l) = 
+                        if h = #"{" then
+                            parse(l)
+                        else if h = #"}" then
+                            ([], l)
+                        else
+                            let
+                                val (l2, r) = parse(l)
+                            in
+                                (fractalFromString(implode([h])) :: l2, r)
+                            end
+                in
+                    if hd(s) = #"{" then
+                        let
+                            val (l, r) = parse(tl(s))
+                        in
+                            l :: parseMatrix'(r)
+                        end
+                    else if hd(s) = #"}" then
+                        []
+                    else
+                        raise Fail "parseMatrix' ran out of elements before it struck an end character!"
+                end
+        in
+            parseMatrix'(explode(s))
+        end
 end
 
 (*
