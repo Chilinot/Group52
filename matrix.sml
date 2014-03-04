@@ -235,9 +235,22 @@ abstype matrix = Matrix of fractal list list with
         in
             mDet'(m, 1)
         end
-        
+    
+    (*
+        mCofactor (m)
+        TYPE:   Matrix -> Matrix
+        PRE:    Square matrix(nXn)
+        POST:   Returns the cofactor matrix of m
+    *)
     fun mCofactor (Matrix(m)) = 
         let
+            (*
+                cofactor' (matrix1, matrix2,(searchPosX,searchPosY), (currentX,currentY),i,modu)
+                TYPE:   int list list * int list list * (int * int) * (int * int) * int * int -> (int * int)
+                PRE:    x<length matrix1
+                POST:   Returns the cofactor value of the element in matrix at (searchPosX,searchPosY), and the modulo current value.
+            *)
+            (*  VARIANT: searchPosX+searchPosY *)
             fun cofactor' (first::matrix, newMatrix, (x,y), (xPos,yPos), 2,modu)  = 
                 if (modu mod 2) = 0 then
                     (mDet(Matrix(first::matrix)), modu+1)
@@ -249,6 +262,13 @@ abstype matrix = Matrix of fractal list list with
                 else
                     cofactor'(matrix, first::newMatrix,(x,y),(xPos,yPos+1),i,modu)
 
+            (*
+                cofactor''(matrix,list,y,i,modu)
+                TYPE:   int list list * int list * int * int * int -> (int list * int)
+                PRE:    true
+                POST:   Returns the cofactor row y of matrix, and current modulus value
+            *)
+            (*  VARIANT: i *)
             fun cofactor'' (matrix,list,y,0,modu) = (list,modu)
               | cofactor'' (matrix, list, y, i,modu) = 
                 let
@@ -257,6 +277,13 @@ abstype matrix = Matrix of fractal list list with
                     cofactor''(matrix, element::list,y,i-1,m)
                 end 
 
+            (*
+                cofactor'''(matrix,newMatrix, y, modu)
+                TYPE:   int list list * int list list * int * int -> int list list
+                PRE:    true
+                POST:   Returns the cofactor matrix of matrix
+            *)
+            (*  VARIANT: length of matrix *)
             fun cofactor''' (matrix, newMatrix,0,modu) = newMatrix  
               | cofactor''' (matrix as (first::rest), newMatrix,y,modu) = 
                 let
