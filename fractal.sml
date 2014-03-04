@@ -61,8 +61,7 @@ abstype fractal = Fractal of int * int with
         PRE:    True
         POST:   String representing the fractal f.
     *)
-    fun fracToString(Fractal(n,1)) = Int.toString(n)
-      | fracToString(Fractal(n,d)) = Int.toString(n) ^ "/" ^ Int.toString(d)
+    fun fracToString(Fractal(n,d)) = Int.toString(n) ^ "/" ^ Int.toString(d)
     
     (*
         fracToReal f
@@ -128,20 +127,22 @@ abstype fractal = Fractal of int * int with
         TYPE:   string -> fractal
         PRE:    s has a structure similar to "1/4", meaning, it has to have a numerator and denominator and a length of at least 3.
         POST:   Fractal equal to the fractal represented in the string.
+        SIDE-EFFECTS: Raises Fail if the string does not follow the structure declared in PRE.
     *)
     fun fractalFromString(s) = 
         let
+            fun divide([], n, d)      = (n, d)
+              | divide(#"/"::l, n, d) = divide(l, n, d@[#"0"])
+              | divide(h::l, n, [])   = divide(l, n@[h], [])
+              | divide(h::l, n, d)    = divide(l, n, d@[h])
+            
             val l = explode(s)
+            val (n, d) = divide(l, [], [])
         in
-            if length l <> 3 then
-                raise Fail "fractalFromString recieved string of illegal length!"
+            if length d = 0 then
+                raise Fail("fractalFromString recieved string of illegal format! n=" ^ implode(n))
             else
-                let
-                    val n = valOf(Int.fromString(implode([hd(l)])))
-                    val d = valOf(Int.fromString(implode([hd(tl(tl(l)))])))
-                in
-                    createFractal(n,d)
-                end
+                createFractal(valOf(Int.fromString(implode(n))), valOf(Int.fromString(implode(d))))
         end
 end
 
@@ -191,7 +192,9 @@ fun fractalTest() =
           | test 6 =
             gcd(1, 12) = 1 andalso gcd(~1, 12) = 1 andalso gcd(12, 24) = 12 andalso gcd(~12, ~24) = ~12 andalso gcd(~12, ~23) = ~1
           | test 7 =
-            fracToString(fractalFromString("1/4")) = "1/4"
+            fracToString(fractalFromString("1/4")) = "1/4" andalso
+            fracToString(fractalFromString("10/20")) = "1/2" andalso
+            fracToString(fractalFromString("10/2")) = "5/1"
             
         fun getString(true)  = "SUCCESS"
           | getString(false) = "FAILED"
@@ -202,5 +205,5 @@ fun fractalTest() =
               (* "Test 4: " ^ getString(test(4)) ^ "\n" ^ *)
               "Test fracToString: \t\t"  ^ getString(test(5)) ^ "\n" ^
               "Test gcd: \t\t"           ^ getString(test(6)) ^ "\n" ^
-              "Test fractalToString: \t" ^ getString(test(7)) ^ "\n" )
+              "Test fractalFromString: \t" ^ getString(test(7)) ^ "\n" )
     end 
