@@ -338,36 +338,55 @@ abstype matrix = Matrix of fractal list list with
                 mFractMult(fracDivide(toFractal(1), det), mAdjoint(m))
         end
     
+    (*
+        parseMatrix s
+        TYPE:   string -> matrix
+        PRE:    - Each element in the string s that is supposed to become an element in the matrix has to be represented as a fractal. I.e "1/4".
+                - The string can not represent an empty matrix. I.e: "{}".
+        POST:   Matrix equal to which represented in the string s.
+        EXAMPLE:
+            Create a matrix with the following structure: 1 2
+                                                          3 4
+                parseMatrix("{{1/1, 2/1}, {3/1, 4/1}}")
+    *)
     fun parseMatrix(s) =
         let
-            fun parseMatrix'(s) = 
-                let
-                    fun parse([]) = raise Fail "Parse ran out of elements before it struck an end character!"
-                      | parse(h::l) = 
-                        if h = #"{" then
-                            parse(l)
-                        else if h = #"}" then
-                            ([], l)
-                        else
-                            let
-                                val (l2, r) = parse(l)
-                            in
-                                (fractalFromString(implode([h])) :: l2, r)
-                            end
-                in
-                    if hd(s) = #"{" then
-                        let
-                            val (l, r) = parse(tl(s))
-                        in
-                            l :: parseMatrix'(r)
-                        end
-                    else if hd(s) = #"}" then
-                        []
-                    else
-                        raise Fail "parseMatrix' ran out of elements before it struck an end character!"
-                end
+            fun retrieveFractal([])      = []
+              | retrieveFractal(#"}"::l) = []
+              | retrieveFractal(#","::l) = []
+              | retrieveFractal(#" "::l) = []
+              | retrieveFractal(h::l)    = h :: retrieveFractal(l)
+            
+            fun parse([]) = raise Fail "Parse ran out of elements before it struck an end character!"
+              | parse(h::l) = 
+                if h = #"{" orelse h = #"," orelse h = #" " then  (* Skip these characters *)
+                    parse(l)
+                else if h = #"}" then                             (* End character, marks the end of the recursion *)
+                    ([], l)
+                else
+                    let
+                        val f = [h] @ retrieveFractal(l)
+                        val (l2, r) = parse(List.drop(l, length(f)))
+                    in
+                        (fractalFromString(implode(f)) :: l2, r)
+                    end
+        
+            fun parseMatrix'([]) = raise Fail "parseMatrix' ran out of characters before the end character!"
+              | parseMatrix'(h::s) = 
+                if h = #"," orelse h = #" " then
+                    parseMatrix'(s)
+                else if h = #"{" then
+                    let
+                        val (l, r) = parse(s)
+                    in
+                        l :: parseMatrix'(r)
+                    end
+                else if h = #"}" then
+                    []
+                else
+                    raise Fail "parseMatrix' seemed to have recieved an argument of illegal form!"
         in
-            parseMatrix'(explode(s))
+            Matrix(parseMatrix'(explode(s)))
         end
 end
 
@@ -449,6 +468,17 @@ fun matrixTest() =
             in
                 matrixToString(r) = matrixToString(a)
             end
+          | test 9 =
+            let
+                val r = parseMatrix("{{1/1,2/1,3/1},{4/1,5/1,6/1}, {7/1 ,8/1, 9/1}}")
+                val a = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[toFractal(7),toFractal(8),toFractal(9)]])
+                
+                val r2 = parseMatrix("{{1/1,2/1,3/1},{4/1,5/1,6/1},{7/3,80/20,9/2}}")
+                val a2 = createMatrix([[toFractal(1),toFractal(2),toFractal(3)],[toFractal(4),toFractal(5),toFractal(6)],[createFractal(7,3),toFractal(4),createFractal(9,2)]])
+            in
+                matrixToString(r)  = matrixToString(a) andalso
+                matrixToString(r2) = matrixToString(a2)
+            end
             
         fun getString(true)  = "SUCCESS"
           | getString(false) = "FAILED"
@@ -460,5 +490,6 @@ fun matrixTest() =
               "Test mDet: \t "        ^ getString(test(5)) ^ "\n" ^
               "Test mCofactor: \t "   ^ getString(test(6)) ^ "\n" ^
               "Test mAdjoint: \t "    ^ getString(test(7)) ^ "\n" ^
-              "Test mInv: \t "        ^ getString(test(8)) ^ "\n" )
+              "Test mInv: \t "        ^ getString(test(8)) ^ "\n" ^
+              "Test parseMatrix: \t " ^ getString(test(9)) ^ "\n" )
     end 
