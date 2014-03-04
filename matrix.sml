@@ -125,10 +125,23 @@ abstype matrix = Matrix of fractal list list with
     *)
     fun mOp(f, m1, m2) = 
         let
+            (*
+                mOp'(f, l1, l2)
+                TYPE:   ('a * 'b -> 'c) * 'a list * 'b list -> 'c list
+                PRE:    True
+                POST:   List of results from the function f being applied to for each element in the lists l1 and l2.
+            *)
+            (*  VARIANT: Length of l1 and l2. *)
             fun mOp'(_, _, []) = []
               | mOp'(_, [], _) = []
               | mOp'(f, e1::r1, e2::r2) = f(e1, e2) :: mOp'(f, r1, r2)
               
+            (*
+                mOp''(f, m1, m2)
+                TYPE:   ('a * 'b -> 'c) * matrix * matrix -> 'c list list
+                PRE:    True
+                POST:   List of results from the mOp' function, where the arguments passed are the function f, and each row in the matrixes m1 and m2.
+            *)
             fun mOp''(_, _, Matrix([])) = []
               | mOp''(_, Matrix([]), _) = []
               | mOp''(f, Matrix(r1::m1), Matrix(r2::m2)) = mOp'(f, r1, r2) :: mOp''(f, Matrix(m1), Matrix(m2))
