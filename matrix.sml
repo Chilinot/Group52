@@ -343,7 +343,7 @@ abstype matrix = Matrix of fractal list list with
         TYPE:   string -> matrix
         PRE:    - Each element in the string s that is supposed to become an element in the matrix has to be represented as a fractal. I.e "1/4".
                 - The string can not represent an empty matrix. I.e: "{}".
-        POST:   Matrix equal to which represented in the string s.
+        POST:   Matrix equal to which was represented in the string s.
         EXAMPLE:
             Create a matrix with the following structure: 1 2
                                                           3 4
@@ -360,7 +360,7 @@ abstype matrix = Matrix of fractal list list with
               | parseRow(h::l) = 
                 if h = #"{" orelse h = #"," then  (* Skip these characters *)
                     parseRow(l)
-                else if h = #"}" then                             (* End character, marks the end of the recursion *)
+                else if h = #"}" then             (* End character, marks the end of the recursion *)
                     ([], l)
                 else
                     let
