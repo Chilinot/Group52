@@ -122,6 +122,27 @@ abstype fractal = Fractal of int * int with
     *)
     fun fracEqualsZero(Fractal(0, _)) = true
       | fracEqualsZero(_) = false
+      
+    (*
+        fractalFromString s
+        TYPE:   string -> fractal
+        PRE:    s has a structure similar to "1/4", meaning, it has to have a numerator and denominator and a length of at least 3.
+        POST:   Fractal equal to the fractal represented in the string.
+    *)
+    fun fractalFromString(s) = 
+        let
+            val l = explode(s)
+        in
+            if length l <> 3 then
+                raise Fail "fractalFromString recieved string of illegal length!"
+            else
+                let
+                    val n = valOf(Int.fromString(implode([hd(l)])))
+                    val d = valOf(Int.fromString(implode([hd(tl(tl(l)))])))
+                in
+                    createFractal(n,d)
+                end
+        end
 end
 
 (* 
@@ -169,14 +190,17 @@ fun fractalTest() =
             fracToString(createFractal(1,4)) = "1/4"
           | test 6 =
             gcd(1, 12) = 1 andalso gcd(~1, 12) = 1 andalso gcd(12, 24) = 12 andalso gcd(~12, ~24) = ~12 andalso gcd(~12, ~23) = ~1
+          | test 7 =
+            fracToString(fractalFromString("1/4")) = "1/4"
             
         fun getString(true)  = "SUCCESS"
           | getString(false) = "FAILED"
     in
-        print("Test fracAdd: \t "      ^ getString(test(1)) ^ "\n" ^
-              "Test fracSub: \t "      ^ getString(test(2)) ^ "\n" ^
-              "Test fracMult: \t "     ^ getString(test(3)) ^ "\n" ^
+        print("Test fracAdd: \t\t"       ^ getString(test(1)) ^ "\n" ^
+              "Test fracSub: \t\t"       ^ getString(test(2)) ^ "\n" ^
+              "Test fracMult: \t\t"      ^ getString(test(3)) ^ "\n" ^
               (* "Test 4: " ^ getString(test(4)) ^ "\n" ^ *)
-              "Test fracToString: \t " ^ getString(test(5)) ^ "\n" ^
-              "Test gcd: \t "          ^ getString(test(6)) ^ "\n" )
+              "Test fracToString: \t\t"  ^ getString(test(5)) ^ "\n" ^
+              "Test gcd: \t\t"           ^ getString(test(6)) ^ "\n" ^
+              "Test fractalToString: \t" ^ getString(test(7)) ^ "\n" )
     end 
