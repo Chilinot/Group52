@@ -8,37 +8,36 @@ use "matrix.sml";
  *)
 fun readLine () = valOf(TextIO.inputLine TextIO.stdIn);
 
-(* readNumber ()
-   TYPE: unit -> real
-   PRE: true
-   POST: a real number read from stdIn
-   SIDE-EFFECTS: prints to and reads from stdIn
- *)
-fun readNumber () =
-  (
-    print "Enter a number: ";
-    case Int.fromString (readLine ()) of
-      SOME r => r
-    | NONE => (print "Invalid number!\n"; readNumber ())
-  );
-  
-
 fun secondMatrix(m) = 
     let
+        val c = (
+            print "Please enter a second matrix: ";
+            readLine()
+        )
     in
+        if c = "c\n" then
+            oneMatrix(m)
+        else
+            twoMatrix(m, parseMatrix(c))
     end
+    handle Fail s => (
+        print("\nSomething went wrong while trying to parse the input! Please try again.\n"); 
+        start()
+    )
 
 fun start() =
     let 
-        val s = (
+        val m = (
             print "Please enter a matrix: ";
-            case parseMatrix(readLine()) of
-                SOME m => m
-              | NONE   => (print "You need to enter something!"; start())
+            parseMatrix(readLine())
         )
     in
         secondMatrix(m)
     end
+    handle Fail s => (
+        print("\nSomething went wrong while trying to parse the input! Please try again.\n"); 
+        start()
+    )
     
 
 
