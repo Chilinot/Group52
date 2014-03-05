@@ -496,13 +496,13 @@ fun matrixTest() =
         fun getString(true)  = "SUCCESS"
           | getString(false) = "FAILED"
     in
-        print("Test mAdd: \t "        ^ getString(test(1)) ^ "\n" ^
-              "Test mSub: \t "        ^ getString(test(2)) ^ "\n" ^
-              "Test mMult: \t "       ^ getString(test(3)) ^ "\n" ^
-              "Test mFractMult: \t "  ^ getString(test(4)) ^ "\n" ^
-              "Test mDet: \t "        ^ getString(test(5)) ^ "\n" ^
-              "Test mCofactor: \t "   ^ getString(test(6)) ^ "\n" ^
-              "Test mAdjoint: \t "    ^ getString(test(7)) ^ "\n" ^
-              "Test mInv: \t "        ^ getString(test(8)) ^ "\n" ^
-              "Test parseMatrix: \t " ^ getString(test(9)) ^ "\n" )
+        print("Test mAdd: \t\t"        ^ getString(test(1)) ^ "\n" ^
+              "Test mSub: \t\t"        ^ getString(test(2)) ^ "\n" ^
+              "Test mMult: \t\t"       ^ getString(test(3)) ^ "\n" ^
+              "Test mFractMult: \t\t"  ^ getString(test(4)) ^ "\n" ^
+              "Test mDet: \t\t"        ^ getString(test(5)) ^ "\n" ^
+              "Test mCofactor: \t\t"   ^ getString(test(6)) ^ "\n" ^
+              "Test mAdjoint: \t\t"    ^ getString(test(7)) ^ "\n" ^
+              "Test mInv: \t\t"        ^ getString(test(8)) ^ "\n" ^
+              "Test parseMatrix: \t\t" ^ getString(test(9)) ^ "\n" )
     end 
