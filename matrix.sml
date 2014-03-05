@@ -351,11 +351,25 @@ abstype matrix = Matrix of fractal list list with
     *)
     fun parseMatrix(s) =
         let
+            (*
+                retrieveFractal l
+                TYPE:   char list -> char list
+                PRE:    True
+                POST:   All characters from left to right that is before any of the "}" and "," characters.
+            *)
+            (*  VARIANT: Length of l. *)
             fun retrieveFractal([])      = []
               | retrieveFractal(#"}"::l) = []
               | retrieveFractal(#","::l) = []
               | retrieveFractal(h::l)    = h :: retrieveFractal(l)
             
+            (*
+                parseRow l
+                TYPE:   char list -> fractal list * char list
+                PRE:    The list of chars has to be correctly formatted according to the pre in parseMatrix.
+                POST:   
+            *)
+            (*  VARIANT: Length of l. *)
             fun parseRow([]) = raise Fail "parseRow ran out of elements before it struck an end character!"
               | parseRow(h::l) = 
                 if h = #"{" orelse h = #"," then  (* Skip these characters *)
