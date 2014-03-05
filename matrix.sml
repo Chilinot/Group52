@@ -112,7 +112,7 @@ abstype matrix = Matrix of fractal list list with
             *)
             (*  VARIANT: Length of r. *)
             fun matrixToString'([])   = ""
-              | matrixToString'(e::r) = fracToString(e) ^ " " ^ matrixToString'(r)
+              | matrixToString'(e::r) = fracToString(e) ^ "\t" ^ matrixToString'(r)
         in
             matrixToString'(r) ^ "\n" ^ matrixToString(Matrix(m))
         end
