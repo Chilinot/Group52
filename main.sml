@@ -1,12 +1,6 @@
 use "matrix.sml";
 
-(* readLine ()
-   TYPE: unit -> string
-   PRE: true
-   POST: the current line of input from stdIn
-   SIDE-EFFECTS: reads from stdIn
- *)
-fun readLine () = valOf(TextIO.inputLine TextIO.stdIn)
+fun readSTD () = valOf(TextIO.inputLine TextIO.stdIn)
 
 fun twoMatrix(m1, m2) = (
         print(
@@ -16,7 +10,7 @@ fun twoMatrix(m1, m2) = (
             "3. Multiplication \n" ^
             "CHOICE: "
         );
-        case readLine() of
+        case readSTD() of
             "1\n" => matrixToString(mAdd(m1, m2))
           | "2\n" => matrixToString(mSub(m1, m2))
           | "3\n" => matrixToString(mMult(m1, m2))
@@ -32,7 +26,7 @@ fun oneMatrix(m) = (
             "4. Cofactor matrix \n" ^
             "CHOICE: "
         );
-        case readLine() of
+        case readSTD() of
             "1\n" => matrixToString(mInv(m))
           | "2\n" => fracToString(mDet(m))
           | "3\n" => matrixToString(mAdjoint(m))
@@ -44,7 +38,7 @@ fun secondMatrix(m) =
     let
         val c = (
             print "Please enter a second matrix. \nEnter C to only use one matrix: ";
-            readLine()
+            readSTD()
         )
     in
         if c = "c\n" orelse c = "C\n" then
@@ -61,7 +55,7 @@ fun start() =
     let 
         val m = (
             print "Please enter a matrix: ";
-            parseMatrix(readLine())
+            parseMatrix(readSTD())
         )
     in
         print("\nResult: \n" ^ secondMatrix(m) ^ "\n")
