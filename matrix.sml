@@ -189,14 +189,30 @@ abstype matrix = Matrix of fractal list list with
                 multi(l1, l2)
                 TYPE:   fractal list * fractal list list -> fractal list
                 PRE:    True
-                POST:   
+                POST:   Returns list of elements from l1 multiplied with l2
             *)
-            fun multi(_, [])      = [] 
+            (*  VARIANT: Length of l2 *)
+            fun multi([], _)      = []
+              | multi(_, [])      = [] 
               | multi(x, (y::ys)) = multi' (x,y) :: multi (x, ys)
 
-            fun multiply'([], _) = [] 
+            (*
+                multiply' (l1, l2)
+                TYPE:   fractal list list * fractal list list -> fractal list list
+                PRE:    True
+                POST:   
+            *)
+            (*  VARIANT: length of m *)
+            fun multiply'(_, []) = []
+              | multiply'([], _) = [] 
               | multiply'((x::xs), (y::ys)) = multi (x, y::ys) :: multiply' (xs, (y::ys))
 
+            (*
+                multiply(l1, l2)
+                TYPE:   fractal list list * fractal list list -> fractal list list
+                PRE:    True
+                POST:   
+            *)
             fun multiply(x, []) = x
               | multiply(x, y) = multiply' (x, flipp y)
         in
