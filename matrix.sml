@@ -383,7 +383,8 @@ abstype matrix = Matrix of fractal list list with
                 parseRow l
                 TYPE:   char list -> fractal list * char list
                 PRE:    The list of chars has to be correctly formatted according to the pre in parseMatrix.
-                POST:   
+                POST:   Finished fractal list after the char list l has been parsed by the aux-functions.
+                SIDE-EFFECTS: Raises Fail if the chars in l is in an illegal order.
             *)
             (*  VARIANT: Length of l. *)
             fun parseRow([]) = raise Fail "parseRow ran out of elements before it struck an end character!"
@@ -400,6 +401,14 @@ abstype matrix = Matrix of fractal list list with
                         (fractalFromString(implode(f)) :: l2, r)
                     end
         
+            (*
+                parseMatrix' l
+                TYPE:   char list -> fractal list list
+                PRE:    l needs to be an exploded version of a correctly structured string according to the PRE of parseMatrix.
+                POST:   Finished 2D-fractal list after the char list l has been parsed by the aux-functions.
+                SIDE-EFFECTS: Raises Fail if the chars in l is in an illegal order.
+            *)
+            (*  VARIANT: Lenght of l. *)
             fun parseMatrix'([]) = raise Fail "parseMatrix' ran out of characters before the end character!"
               | parseMatrix'(h::s) = 
                 if h = #"," then
