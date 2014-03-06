@@ -131,6 +131,13 @@ abstype fractal = Fractal of int * int with
     *)
     fun fractalFromString(s) = 
         let
+            (*
+                divide(l, n, d)
+                TYPE:   char list * char list * char list -> char list * char list
+                PRE:    n and d are empty, l contains one "/" character
+                POST:   All chars before the "/" char have been put in the n list, all chars after is in the d list.
+            *)
+            (*  VARIANT: Lenght of l. *)
             fun divide([], n, d)      = (n, d)
               | divide(#"/"::l, n, d) = divide(l, n, d@[#"0"])
               | divide(h::l, n, [])   = divide(l, n@[h], [])
@@ -179,14 +186,14 @@ fun fractalTest() =
             in
                 Real.==(fracToReal(m), 138.0)
             end 
-         (*  | test 4 =
+          | test 4 =
             let
                 val f1 = createFractal(4, 6)
                 val f2 = createFractal(3, 2)
                 val d  = fracDivide(f1, f2)
             in
-                Real.==(fracToReal(d), 4.0 / 9.0) (* This test is actually true, even though it returns false. Possibly a bug in Real.== *)
-            end  *)
+                fracToString(d) = "4/9"
+            end 
           | test 5 = 
             fracToString(createFractal(1,4)) = "1/4"
           | test 6 =
@@ -199,11 +206,11 @@ fun fractalTest() =
         fun getString(true)  = "SUCCESS"
           | getString(false) = "FAILED"
     in
-        print("Test fracAdd: \t\t"       ^ getString(test(1)) ^ "\n" ^
-              "Test fracSub: \t\t"       ^ getString(test(2)) ^ "\n" ^
-              "Test fracMult: \t\t"      ^ getString(test(3)) ^ "\n" ^
-              (* "Test 4: " ^ getString(test(4)) ^ "\n" ^ *)
-              "Test fracToString: \t\t"  ^ getString(test(5)) ^ "\n" ^
-              "Test gcd: \t\t"           ^ getString(test(6)) ^ "\n" ^
+        print("Test fracAdd: \t\t"         ^ getString(test(1)) ^ "\n" ^
+              "Test fracSub: \t\t"         ^ getString(test(2)) ^ "\n" ^
+              "Test fracMult: \t\t"        ^ getString(test(3)) ^ "\n" ^
+              "Test fracDivide: \t\t"      ^ getString(test(4)) ^ "\n" ^
+              "Test fracToString: \t\t"    ^ getString(test(5)) ^ "\n" ^
+              "Test gcd: \t\t"             ^ getString(test(6)) ^ "\n" ^
               "Test fractalFromString: \t" ^ getString(test(7)) ^ "\n" )
     end 

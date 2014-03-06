@@ -200,7 +200,7 @@ abstype matrix = Matrix of fractal list list with
                 multiply' (l1, l2)
                 TYPE:   fractal list list * fractal list list -> fractal list list
                 PRE:    True
-                POST:   
+                POST:   l1 and the transpose of l2 multiplied with each other in the same way as matrix multiplication
             *)
             (*  VARIANT: length of m *)
             fun multiply'(_, []) = []
@@ -211,7 +211,7 @@ abstype matrix = Matrix of fractal list list with
                 multiply(l1, l2)
                 TYPE:   fractal list list * fractal list list -> fractal list list
                 PRE:    True
-                POST:   
+                POST:   l1 and l2 multiplied with each other in the same way as matrix multiplication.
             *)
             fun multiply(x, []) = x
               | multiply(x, y) = multiply' (x, flipp y)
